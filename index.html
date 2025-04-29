@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI搭載チャットボット - FAQ対応をシンプルに</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 80px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: white;
+            transform: skewY(-3deg);
+            z-index: 1;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #fff;
+            color: #007bff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        main {
+            padding: 60px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        section {
+            margin-bottom: 80px;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            flex: 1 1 300px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        
+        .pricing {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .price {
+            font-size: 3rem;
+            color: #007bff;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .price-note {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .price-features {
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+        
+        .price-features li {
+            margin-bottom: 10px;
+            list-style-type: none;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .price-features li:before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: #28a745;
+            position: absolute;
+            left: 0;
+        }
+        
+        .faq {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .faq-answer {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .faq-answer.active {
+            display: block;
+        }
+        
+        .steps {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .step-number {
+            background-color: #007bff;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+        
+        .step-content {
+            padding-bottom: 30px;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            width: 2px;
+            height: calc(100% - 30px);
+            background-color: #e9ecef;
+        }
+        
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .contact {
+            margin-top: 20px;
+        }
+        
+        .contact a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            header p {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card {
+                flex: 1 1 100%;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 15px;
+            }
+            
+            .step:not(:last-child):after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FAQ対応を<br>簡単に自動化</h1>
+            <p>AIを活用したチャットボットで、お客様のよくある質問に24時間自動で対応</p>
+            <a href="#pricing" class="btn">料金を確認する</a>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <section id="about">
+                <h2>AI搭載チャットボットの機能</h2>
+                <p style="text-align: center; max-width: 800px; margin: 0 auto 40px;">
+                    FAQ対応に特化したカスタマーサポートを提供するチャットボットサービスです。ベクトル検索技術で質問の意図を理解し、適切な回答を瞬時に提供します。
+                </p>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI対応</h3>
+                        <p>ベクトル検索技術により、キーワード一致以外の質問にも柔軟に対応できます。ユーザーの質問意図を理解し、最適な回答を提供します。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>自然な会話</h3>
+                        <p>単純なキーワード一致ではなく、文脈を考慮した自然な会話が可能です。よりユーザーフレンドリーな対応ができます。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>カスタマイズ</h3>
+                        <p>口調の変更や特定質問への対応など、ご要望に合わせたカスタマイズが可能です。チャット画面のデザイン変更は別途料金が発生する場合があります。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="pricing">
+                <h2>料金プラン</h2>
+                <div class="pricing">
+                    <h3>シンプル料金体系</h3>
+                    <div class="price">¥25,000</div>
+                    <p class="price-note">初期費用のみ・運用は従量課金</p>
+                    
+                    <ul class="price-features">
+                        <li>FAQ自動回答機能</li>
+                        <li>10回までのFAQ情報更新込み</li>
+                        <li>Web設置サポート</li>
+                        <li>GCP操作/OpenAI APIキー取得サポート</li>
+                    </ul>
+                    
+<!--                     <a href="#contact" class="btn">お問い合わせ</a> -->
+                </div>
+            </section>
+            
+            <section id="process">
+                <h2>導入の流れ</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>お問い合わせ</h3>
+                            <p>ココナラからのサービスお問い合わせで導入プロセスが始まります。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>ヒアリング</h3>
+                            <p>チャットボットの規模感や使用用途などについてお伺いします。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>FAQ情報の提供</h3>
+                            <p>よくある質問とその回答をエクセルやスプレッドシートでご提供いただきます。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>テスト環境での確認</h3>
+                            <p>テストページでの動作確認を行い、購入判断をしていただきます。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>本番環境への設置</h3>
+                            <p>ご購入後、本番環境にチャットボットを設置するためのスクリプトタグを発行いたします。<br>ここでお客様のGCP、OpenAI APIキーを利用します。</br></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="faq">
+                <h2>よくある質問</h2>
+                <div class="faq">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            機能について
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            FAQ（よくある質問）に特化したカスタマーサポートを提供します。ベクトル検索機能によってAIが質問の意図を理解し、回答例から適切な回答を提供することが可能なため、ユーザーの自己解決力を高めることができます。単純なキーワード一致以外にも回答が生成できるため、より自然な会話が可能です。
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            料金について
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            初期費用は25,000円で、10回のFAQ更新が含まれています。ランニングコストはOpenAI APIとGCPの利用量によって発生しますが、月1000件の問い合わせ数でも1000円以内に収まると想定されます。
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            必要なもの
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            ご利用前に準備していただくものは、ある程度まとまったFAQ情報（想定される質問とその回答）、GCPアカウント、OpenAI APIの利用キーです。GCPアカウントはGoogleのアカウントを持っていれば簡単に作成でき、OpenAI APIの利用キーは、OpenAIの公式サイトから取得できます。操作サポートは無料で行いますので、必要な場合はお知らせください。
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            カスタマイズ
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            チャットボットはカスタマイズが可能です。例えば、口調を変更したり、特定の質問に対して特別な回答を設定することができます。カスタマイズの具体的な内容については、お気軽にご相談ください。
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            注意事項
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            ベクトル検索機能を用いて精度の高い回答を提供していますが、100%の正答率を保証するものではありません。また、ユーザーの質問の仕方やFAQの登録文章によっては適切な回答を提供できない可能性がありますので、あらかじめご了承ください。また、チャットボットの表示位置は画面右下に固定されます。そのため、Webサイトのデザインによっては、他の要素と重なってしまう場合があります。
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+<!--             <section id="contact">
+                <h2>お問い合わせ</h2>
+                <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                    <p>導入やカスタマイズなどについてのお問い合わせは、下記リンクからお気軽にどうぞ。</p>
+                    <div class="contact" style="margin-top: 30px;">
+                        <a href="#" class="btn">ココナラで問い合わせる</a>
+                        <p>※このページはclaude AIで作成しています。</p>
+                    </div>
+                </div>
+            </section> -->
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AI搭載チャットボットサービス</p>
+        </div>
+    </footer>
+    
+
+    
+    <script>
+        // FAQアコーディオン
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const answer = item.querySelector('.faq-answer');
+                answer.classList.toggle('active');
+                
+                const icon = item.querySelector('.fa-chevron-down');
+                if (answer.classList.contains('active')) {
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    icon.style.transform = 'rotate(0)';
+                }
+            });
+        });
+        
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+<script>
+ window.difyChatbotConfig = {
+  token: '4MgnhAyHUvvupx3I',
+  systemVariables: {
+    // user_id: 'YOU CAN DEFINE USER ID HERE',
+    // conversation_id: 'YOU CAN DEFINE CONVERSATION ID HERE, IT MUST BE A VALID UUID',
+  },
+ }
+</script>
+<script
+ src="https://udify.app/embed.min.js"
+ id="4MgnhAyHUvvupx3I"
+ defer>
+</script>
+<style>
+  #dify-chatbot-bubble-button {
+    background-color: #1C64F2 !important;
+  }
+  #dify-chatbot-bubble-window {
+    width: 24rem !important;
+    height: 40rem !important;
+  }
+</style>
